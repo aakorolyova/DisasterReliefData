@@ -8,10 +8,10 @@ import requests
 from request_data_classes import (
     BaseRequestData,
     Condition,
-    Conditions,
     Fields,
+    Filter,
+    Parameters,
     Query,
-    RequestData,
 )
 
 
@@ -30,16 +30,9 @@ def get_disaster_types(
 
 
 def request_with_params(
-    url, params: BaseRequestData | Query | Condition | Conditions | Fields
+    url, params: BaseRequestData | Query | Condition | Filter | Fields
 ):
     response = requests.get(
         url, params=params.model_dump(exclude_none=True, exclude_unset=True)
-    )
-    return response.status_code, response.json()
-
-
-def request_with_data(url, data: RequestData):
-    response = requests.get(
-        url, data=data.model_dump(exclude_none=True, exclude_unset=True)
     )
     return response.status_code, response.json()

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Literal
 from urllib.parse import quote
 
@@ -9,45 +9,41 @@ from pydantic import BaseModel
 from request_data_classes import (
     BaseRequestData,
     Condition,
-    Conditions,
     Fields,
+    Filter,
+    Parameters,
     Query,
-    RequestData,
 )
-from utils import request_with_data, request_with_params
+from utils import request_with_params
 
 appname = "omdena-datacamp"
 url_reports = "https://api.reliefweb.int/v1/reports?"
 url_disasters = "https://api.reliefweb.int/v1/disasters?"
 
 condition = Condition(
-    field="primary_country",
+    field="country",
     value="Turkey",
-    appname=appname,
 )
-conditions = Conditions(
+conditions = Filter(
     conditions=[
         Condition(field="primary_country", value="Turkey"),
         Condition(
             field="date.created",
             value={
-                "from": datetime(year=2023, month=2, day=5),
-                "to": datetime(year=2023, month=4, day=5),
+                "from": datetime(year=2023, month=2, day=5, tzinfo=timezone.utc),
+                "to": datetime(year=2023, month=10, day=5, tzinfo=timezone.utc),
             },
         ),
         Condition(field="disaster_type", value="earthquake"),
     ],
-    appname=appname,
 )
 query = Query(
     value="Gaziantep",
-    appname=appname,
 )
 fields_to_include = Fields(
     include=["body", "primary_country", "date", "disaster_type"],
-    appname=appname,
 )
-parameters = RequestData(
+parameters = Parameters(
     query=query,
     appname=appname,
     filter=conditions,
@@ -55,14 +51,11 @@ parameters = RequestData(
     limit=1000,
 )
 
-for params in [condition, conditions, query, fields_to_include]:
-    status_code, response = request_with_params(url=url_reports, params=params)
-    print(status_code)
+for params in [query, fields_to_include, condition, conditions, parameters]:
+    print(params.to_str())
 
-
-status_code, response = request_with_data(url=url_reports, data=parameters)
-print(status_code)
-
-
-# with open("data/Turkey.json", "w", encoding="utf-8") as f:
-#     json.dump(response.json(), f, indent=1)
+    print(url_reports + params.to_str())
+    response = requests.get(url=url_reports + params.to_str())
+    print(response.status_code)
+    print(response.json())
+    print()
