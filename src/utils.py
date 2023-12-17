@@ -1,0 +1,45 @@
+import json
+from datetime import datetime
+from typing import Literal
+from urllib.parse import quote
+
+import requests
+
+from request_data_classes import (
+    BaseRequestData,
+    Condition,
+    Conditions,
+    Fields,
+    Query,
+    RequestData,
+)
+
+
+def get_disaster_types(
+    types_url="https://api.reliefweb.int/v1/references/disaster-types",
+):
+    response = requests.get(types_url)
+    data = response.json()["data"]
+    disaster_id2type = {
+        item.get("id", None): item.get("fields", {}).get("name", None) for item in data
+    }
+    disaster_type2id = {
+        item.get("fields", {}).get("name", None): item.get("id", None) for item in data
+    }
+    return disaster_id2type, disaster_type2id
+
+
+def request_with_params(
+    url, params: BaseRequestData | Query | Condition | Conditions | Fields
+):
+    response = requests.get(
+        url, params=params.model_dump(exclude_none=True, exclude_unset=True)
+    )
+    return response.status_code, response.json()
+
+
+def request_with_data(url, data: RequestData):
+    response = requests.get(
+        url, data=data.model_dump(exclude_none=True, exclude_unset=True)
+    )
+    return response.status_code, response.json()
