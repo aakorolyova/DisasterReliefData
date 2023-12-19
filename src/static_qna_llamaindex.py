@@ -7,7 +7,8 @@ from llama_index.prompts import PromptTemplate
 
 # %%
 model = "gpt-3.5-turbo-1106"
-print(Path("data/StaticDocs").absolute())
+
+# Data consists of PDFs from https://rnli.org/what-we-do/international/international-resources, wikipedia page with emergency numbers per country, and some FEMA pages
 docs = SimpleDirectoryReader(
     input_dir=str(Path("data/StaticDocs").absolute())
 ).load_data()

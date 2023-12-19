@@ -11,6 +11,8 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 
+# Data consists of PDFs from https://rnli.org/what-we-do/international/international-resources, wikipedia page with emergency numbers per country, and some FEMA pages
+
 llm = ChatOpenAI(temperature=0.7)
 path = path = Path("data/StaticDocs")
 docs = []
