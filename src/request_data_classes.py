@@ -4,9 +4,12 @@ from typing import Literal
 from urllib.parse import quote
 
 import requests
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError, validator
 
-types_url = "https://api.reliefweb.int/v1/references/disaster-types"
+from utils import get_country_list, get_disaster_types
+
+disaster_types = get_disaster_types()
+country_list = get_country_list()
 
 
 class BaseRequestData(BaseModel):
@@ -68,6 +71,58 @@ class Condition(BaseRequestData):
         if self.negate:
             param_list.append(f"filter{conditions_id_str}[negate]=true")
         return "&".join(param_list)
+
+
+class PrimaryCountry(Condition):
+    field: str = "primary_country"
+    value: str | list[str] | None = None
+
+    @validator("value")
+    def validate_country_name(cls, v):
+        if isinstance(v, str):
+            if v not in country_list:
+                raise ValueError(
+                    f"Country name {v} not in the list of allowed country names"
+                )
+        elif isinstance(v, list):
+            for s in v:
+                if s not in country_list:
+                    raise ValueError(
+                        f"Country name {s} not in the list of allowed country names"
+                    )
+        return v
+
+
+class DisasterType(Condition):
+    """
+    Disaster type filter to be used with reports endpoint
+    """
+
+    field: str = "disaster_type"
+    value: str | list[str] | None = None
+
+    @validator("value")
+    def validate_disaster_type(cls, v):
+        if isinstance(v, str):
+            if v not in disaster_types:
+                raise ValueError(
+                    f"Disaster type {v} not in the list of allowed disaster types"
+                )
+        elif isinstance(v, list):
+            for s in v:
+                if s not in disaster_types:
+                    raise ValueError(
+                        f"Disaster type {s} not in the list of allowed disaster types"
+                    )
+        return v
+
+
+class PrimaryDisasterType(DisasterType):
+    """
+    Disaster type filter to be used with disasters endpoint
+    """
+
+    field: str = "primary_type"
 
 
 class Filter(BaseRequestData):
