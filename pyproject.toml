@@ -9,6 +9,14 @@ readme = "README.md"
 python = "^3.10"
 requests = "^2.31.0"
 pydantic = "^2.5.2"
+geocoder = "^1.38.1"
+ruamel-yaml = "^0.18.5"
+llama-index = "^0.9.16.post1"
+pypdf = "^3.17.3"
+langchain = "^0.0.351"
+chromadb = "^0.4.20"
+pysqlite3 = "^0.5.2"
+faiss-cpu = "^1.7.4"
 
 
 [build-system]
