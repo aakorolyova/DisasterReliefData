@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 import requests
 
-from request_data_classes import Condition, Fields, Filter, Parameters, Query
+from reliefweb_data_classes import Condition, Fields, Filter, Parameters, Query
 
 # %%
 appname = "omdena-datacamp"
@@ -28,7 +28,7 @@ conditions = Filter(
                 "to": datetime(year=2023, month=10, day=5, tzinfo=timezone.utc),
             },
         ),
-        Condition(field="disaster_type", value="earthquake"),
+        # Condition(field="disaster_type", value="earthquake"),
     ],
 )
 
@@ -63,9 +63,9 @@ with open("data/Turkey.json", "w", encoding="utf-8") as f:
     json.dump(response.json(), f, indent=1)
 
 # %%
-for params in [query, fields_to_include, condition, conditions, parameters]:
-    print(params.to_str())
-    response = requests.get(url=url_reports + params.to_str())
-    print(response.status_code)
-    print(response.json())
-    print()
+# for params in [query, fields_to_include, condition, conditions, parameters]:
+#     print(params.to_str())
+#     response = requests.get(url=url_reports + params.to_str())
+#     print(response.status_code)
+#     print(response.json())
+#     print()

@@ -1,6 +1,7 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import requests
+from gdacs.api import GDACSAPIReader
 
 from request_data_classes import (
     Condition,
@@ -12,9 +13,11 @@ from request_data_classes import (
     PrimaryDisasterType,
     Query,
 )
+from utils import get_local_current_event_gdacs
 
 
 def monitor():
+    # TODO: restructure and make configurable
     appname = "omdena-datacamp"
     url_reports = "https://api.reliefweb.int/v1/reports?"
     url_disasters = "https://api.reliefweb.int/v1/disasters?"
@@ -54,11 +57,18 @@ def monitor():
     response_reports = requests.get(url=url_reports + parameters_reports.to_str())
     response_disasters = requests.get(url=url_disasters + parameters_disasers.to_str())
 
-    print(response_reports.status_code)
-    print(response_disasters.status_code)
+    client = GDACSAPIReader()
+    gdacs_events = get_local_current_event_gdacs(
+        client=client, country="United States", time_delta=timedelta(days=2)
+    )
 
     date = datetime.now().strftime("%m-%d_%H-%M")
-    if response_reports.json().get("count") or response_disasters.json.get("count"):
+    if (
+        response_reports.json().get("count")
+        or response_disasters.json().get("count")
+        or gdacs_events
+    ):
+        # TODO: send an actual informative warning
         res = "Warning! Something ia happening in the US"
     else:
         res = "Everything is ok"

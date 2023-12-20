@@ -1,10 +1,11 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Literal
 from urllib.parse import quote
 
 import requests
+from gdacs.api import GDACSAPIReader
 
 
 def get_disaster_types(
@@ -46,3 +47,37 @@ def get_country_list(
         if item.get("fields", {}).get("name")
     ]
     return names
+
+
+def get_local_current_event_gdacs(
+    client: GDACSAPIReader,
+    country: str,
+    time_delta: timedelta,
+    date: datetime = datetime.now(),
+    event_type: str | None = None,
+    limit=100,
+):
+    events = client.latest_events(event_type=event_type, limit=limit)  # type: ignore
+    relevant_timespan = date - time_delta
+    relevant = []
+    for event in events.features:
+        properties = event.get("properties", {})
+        affected_countries = [
+            c.get("countryname") for c in properties.get("affectedcountries", []) if c
+        ]
+        affected_countries_iso3 = [
+            c.get("iso3") for c in properties.get("affectedcountries", []) if c
+        ]
+        if country in affected_countries + affected_countries_iso3:
+            start_date_str = properties.get("fromdate", "")
+            end_date_str = properties.get("todate", "")
+
+            start_date = (
+                datetime.fromisoformat(start_date_str) if start_date_str else None
+            )
+            end_date = datetime.fromisoformat(end_date_str) if end_date_str else None
+            if (start_date and start_date > relevant_timespan) or (
+                end_date and end_date > relevant_timespan
+            ):
+                relevant.append(event)
+    return relevant
