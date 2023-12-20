@@ -17,6 +17,8 @@ langchain = "^0.0.351"
 chromadb = "^0.4.20"
 pysqlite3 = "^0.5.2"
 faiss-cpu = "^1.7.4"
+bs4 = "^0.0.1"
+gdacs-api = "^2.0.0"
 
 
 [build-system]

@@ -259,6 +259,19 @@ html5lib = ["html5lib"]
 lxml = ["lxml"]
 
 [[package]]
+name = "bs4"
+version = "0.0.1"
+description = "Dummy package for Beautiful Soup"
+optional = false
+python-versions = "*"
+files = [
+    {file = "bs4-0.0.1.tar.gz", hash = "sha256:36ecea1fd7cc5c0c6e4a1ff075df26d50da647b75376626cc186e2212886dd3a"},
+]
+
+[package.dependencies]
+beautifulsoup4 = "*"
+
+[[package]]
 name = "cachetools"
 version = "5.3.2"
 description = "Extensible memoizing collections and decorators"
@@ -775,6 +788,23 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 files = [
     {file = "future-0.18.3.tar.gz", hash = "sha256:34a17436ed1e96697a86f9de3d15a3b0be01d8bc8de9c1dffd59fb8234ed5307"},
 ]
+
+[[package]]
+name = "gdacs-api"
+version = "2.0.0"
+description = "Unofficial python library for working with GDACS API."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "gdacs-api-2.0.0.tar.gz", hash = "sha256:77b0ec951ea9aa6b448e8b25fd6f29d1eb40582b00a84e203bb66a3cc8dc9e06"},
+    {file = "gdacs_api-2.0.0-py3-none-any.whl", hash = "sha256:f905fe6132474a55cc87250a0f9ee86bbfaa37bf0e9dd0c43ad9aa9307c02fe2"},
+]
+
+[package.dependencies]
+cachetools = "*"
+pydantic = "*"
+requests = ">=2.10.0"
+xmltodict = "*"
 
 [[package]]
 name = "geocoder"
@@ -3422,6 +3452,17 @@ files = [
 ]
 
 [[package]]
+name = "xmltodict"
+version = "0.13.0"
+description = "Makes working with XML feel like you are working with JSON"
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "xmltodict-0.13.0-py2.py3-none-any.whl", hash = "sha256:aa89e8fd76320154a40d19a0df04a4695fb9dc5ba977cbb68ab3e4eb225e7852"},
+    {file = "xmltodict-0.13.0.tar.gz", hash = "sha256:341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56"},
+]
+
+[[package]]
 name = "yarl"
 version = "1.9.4"
 description = "Yet another URL library"
@@ -3542,4 +3583,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "92d2c6894284b282de20f9374c50c640cee6ac09758098731f9c98fe9b84cabe"
+content-hash = "0ba4f094835ef4d9bf068d7eae073f73d1977f935d926cae7767b50b2a0818bf"
